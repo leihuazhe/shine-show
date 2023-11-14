@@ -24,13 +24,10 @@ public class WallpaperController {
   @Autowired
   private MobilePaperService mobilePaperService;
 
-  //Hellohao编写修改
   @RequestMapping("/")
   public String index(Model model) {
     model.addAttribute("webName", webName);
     model.addAttribute("weblinks", weblinks);
-
-    System.out.println("blog:www.hellohao.cn");
     return "index-1";
   }
 
@@ -43,24 +40,30 @@ public class WallpaperController {
 //        return wallpaper;
 //    }
 
-
-  @RequestMapping(value = "/GetWallpapers", method = RequestMethod.GET)
+  @RequestMapping(value = "/getWallpapers", method = RequestMethod.GET)
   @ResponseBody
-  public String GetWallpaper(Integer start, Integer count, Integer category) {
-    String wallpaper = wallpaperService.GetWallpaper(start, count, category);
-    JSONObject jsonObject = new JSONObject();
-    JSONArray jsonArray = new JSONArray();
-    com.alibaba.fastjson.JSONObject imgjo = com.alibaba.fastjson.JSONObject.parseObject(wallpaper);
-    //可以使用parseObject(params，Class<T> clazz)直接转换成需要的Bean
-    JSONArray imgjson = JSONArray.fromObject(imgjo.getString("data"));
-    for (int i = 0; i < imgjson.size(); i++) {
-      JSONObject job = imgjson.getJSONObject(i);  // 遍历 jsonarray 数组，把每一个对象转成 json 对象
-      jsonObject.put("ImgUrl", job.get("url"));
-      jsonObject.put("ImgTag", job.get("utag"));
-      jsonArray.add(i, jsonObject);
-    }
-    return jsonArray.toString();
+  public String getWallpaper(Integer start, Integer count, Integer category) {
+    return wallpaperService.getWallpaperV2(start, count, category);
   }
+
+
+//  @RequestMapping(value = "/GetWallpapers", method = RequestMethod.GET)
+//  @ResponseBody
+//  public String GetWallpaper(Integer start, Integer count, Integer category) {
+//    String wallpaper = wallpaperService.getWallpaperV2(start, count, category);
+//    JSONObject jsonObject = new JSONObject();
+//    JSONArray jsonArray = new JSONArray();
+//    com.alibaba.fastjson.JSONObject imgjo = com.alibaba.fastjson.JSONObject.parseObject(wallpaper);
+//    //可以使用parseObject(params，Class<T> clazz)直接转换成需要的Bean
+//    JSONArray imgjson = JSONArray.fromObject(imgjo.getString("data"));
+//    for (int i = 0; i < imgjson.size(); i++) {
+//      JSONObject job = imgjson.getJSONObject(i);  // 遍历 jsonarray 数组，把每一个对象转成 json 对象
+//      jsonObject.put("ImgUrl", job.get("url"));
+//      jsonObject.put("ImgTag", job.get("utag"));
+//      jsonArray.add(i, jsonObject);
+//    }
+//    return jsonArray.toString();
+//  }
 
 
   //获取所有分类
