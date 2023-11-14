@@ -2,17 +2,20 @@ package com.shine.dev.show.controller;
 
 import com.shine.dev.show.service.MobilePaperService;
 import com.shine.dev.show.service.WallpaperService;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@Slf4j
 public class WallpaperController {
   @Value("${shine.web-name}")
   private String webName;
@@ -40,9 +43,10 @@ public class WallpaperController {
 //        return wallpaper;
 //    }
 
-  @RequestMapping(value = "/getWallpapers", method = RequestMethod.GET)
+  @GetMapping(value = "/getWallpapers")
   @ResponseBody
   public String getWallpaper(Integer start, Integer count, Integer category) {
+    log.info("start=" + start + ",count=" + count + ",category=" + category);
     return wallpaperService.getWallpaperV2(start, count, category);
   }
 
