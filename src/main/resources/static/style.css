@@ -1,0 +1,90 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    padding: 0 25px;
+}
+
+.file_drop_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    padding: 50px 40px 20px;
+    box-shadow: 0 2px 20px #0001, 0 2px 6px #0001;
+    border-radius: 10px;
+    border: 1px solid #0002;
+    position: relative;
+    margin: 25px auto;
+}
+
+.file_drop_box .icon {
+    font-size: 35px;
+    color: #0002;
+    margin-bottom: 30px;
+}
+
+.file_drop_box .select_file {
+    padding: 5px 15px;
+    font-size: 16px;
+    background-color: #03a9f4;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px #0004;
+    border-radius: 5px;
+    position: relative;
+    z-index: 1;
+    transition: 0.3s ease-in-out;
+}
+
+.file_drop_box .select_file:hover {
+    box-shadow: 0 2px 20px #03a9f4;
+    background-color: #2196f3;
+}
+
+.file_drop_box .select_file > i {
+    line-height: 0;
+    font-size: 35px;
+}
+
+.file_drop_box p {
+    margin: 25px 0;
+    color: #555;
+    font-size: 20px;
+}
+
+.file_drop_box input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+}
+
+.image_preview_container {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 280px));
+    justify-content: center;
+    padding: 25px;
+}
+
+.image_preview_container img {
+    width: 100%;
+    border: 1px solid #0001;
+    box-shadow: 0 2px 15px #0001, 0 2px 8px #0001;
+    border-radius: 4px;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}

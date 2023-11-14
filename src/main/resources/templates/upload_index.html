@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Image Preview</title>
+    <link rel="stylesheet" href="/css/drag_drop.css"/>
+</head>
+
+<body>
+<div class="container">
+
+</div>
+
+<div class="all">
+    <input id="image_preview" type="file" accept="image/*" onchange="previewImage()">
+    <p>Drag your files here or click in this area.</p>
+    <div id="image_preview_container"></div>
+    <button type="submit" onclick="uploadImage()">Upload</button>
+    <div id="imageUrl"></div>
+</div>
+
+<script>
+    function previewImage() {
+        var input = document.getElementById('image_preview');
+        var preview = document.getElementById('image_preview_container');
+        var file = input.files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.innerHTML = '<img src="' + reader.result + '" alt="Preview">';
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '';
+        }
+    }
+
+    function uploadImage() {
+        var input = document.getElementById('image_preview');
+        var file = input.files[0];
+
+        if (file) {
+            var formData = new FormData();
+            formData.append('image', file);
+
+            // Replace 'your_backend_url' with the actual URL of your backend service
+            fetch('/in', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var imageUrlDiv = document.getElementById('imageUrl');
+                    imageUrlDiv.innerHTML = 'Image URL: ' + data.url;
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                });
+        } else {
+            console.error('No image selected');
+        }
+    }
+</script>
+</body>
+
+</html>

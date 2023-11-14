@@ -1,0 +1,22 @@
+server:
+  port: 8089
+
+
+
+
+
+
+shine:
+  web-name: dev-show
+  web-links: <li><a href="https://github.com/Hello-hao/HellohaoWallpaper" class="icon fa-github"><span class="label">GitHub</span></a></li><li><a href="http://hellohao.cn" class="icon fa-dribbble"><span class="label">Hellohao²©¿Í</span></a></li>
+  web-key: ZGV2LXNob3ctc2VjcmV0LWtleQ==
+spring:
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+  datasource:
+    url: jdbc:mysql://39.108.110.17:3316/maple?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: koPlAftHlMm6tIsJfe6h7w==
+    driver-class-name: com.mysql.cj.jdbc.Driver
+

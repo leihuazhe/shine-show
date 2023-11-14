@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/notepad.css">
+    <style>
+        #alert {
+            text-align: center;
+            visibility: hidden;
+            width: 15%;
+            font-size: 20pt;
+            margin-top: 10pt
+        }
+
+        #autoSaveText {
+            text-align: left;
+
+        }
+    </style>
+
+    <title>My Web Note Pad</title>
+</head>
+
+<body>
+
+<div class="col col-8">
+    <!--    <div id="note" contenteditable class="paper" style="min-height:15px" th:text="${noteData}"></div>-->
+    <div id="note" contenteditable class="paper" style="min-height:15px"></div>
+    <button class="btn-secondary" onclick="saveFileWithAjax()">saveFile</button>
+    <button class="btn-warning" onclick="removeText()">Remove all text</button>
+    <div class="col col-5" id="autoSaveText">Auto-Saving In <span id="time">20</span> Seconds</div>
+    <div id="alert" class="alert alert-danger"></div>
+</div>
+
+<!--<script src="https://unpkg.com/filer/dist/filer.min.js"></script>-->
+<script src="/js/filer.min.js"></script>
+<script src="/js/jquery-3.7.1.min.js"></script>
+<script>
+
+    // $.ready(
+    //     function () {
+    //         fetchNoteData();
+    //     }
+    // )
+    // window.onload = function () {
+    //     fetchNoteData();
+    // }
+
+
+    const fs = new Filer.FileSystem();
+
+    // window.addEventListener('DOMContentLoaded', (event) => {
+    //     fs.readFile('/note', 'utf8', function (err, data) {
+    //         if (err) {
+    //             console.log(err);
+    //             fs.writeFile('/note', 'utf8', function (err) {
+    //                 if (err) console.log(err);
+    //                 throw err;
+    //             });
+    //         }
+    //         if (data) {
+    //             document.querySelector('#note').innerHTML = data;
+    //
+    //         }
+    //     })
+    // })
+
+    function alertMsg(msg) {
+        document.querySelector('#alert').innerHTML = msg;
+        document.querySelector('#alert').style.visibility = "visible";
+        setTimeout(() => {
+            document.querySelector('#alert').style.visibility = "hidden";
+        }, 2000);
+    }
+
+    function fetchNoteData() {
+        var originUrl = decodeURI(window.location.href);
+        var items = originUrl.split("/");
+        var url = items[items.length - 1];
+        console.log('url', url)
+
+        $.ajax({
+            url: `/note_content/${url}`,
+            type: 'GET',
+            success: function (data) {
+                document.querySelector('#note').innerHTML = data;
+            }
+        });
+    }
+
+    function saveFile() {
+        fs.writeFile('/note', document.querySelector('#note').innerHTML, function (err) {
+            if (err) {
+                console.error('Error saving', err);
+                return alertMsg('Unable to Save!');
+            }
+            alertMsg('Saved!');
+        });
+    }
+
+    function saveFileWithAjax() {
+        var items = decodeURI(window.location.href).split("/");
+        var title = items[items.length - 1];
+        var noteContent = document.querySelector('#note').innerHTML;
+        console.log('title', title);
+        $.ajax({
+            type: 'POST', // 规定请求的类型（GET 或 POST）
+            url: '/saveNote', // 请求的url地址
+            //dataType: 'application/json', //预期的服务器响应的数据类型
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "title": title,
+                "content": noteContent
+            }),//规定要发送到服务器的数据
+            beforeSend: function () { //发送请求前运行的函数（发送之前就会进入这个函数）
+            },
+            success: function (result) { // 当请求成功时运行的函数
+                alertMsg('Saved!', result);
+            },
+            error: function (result) { //失败的函数
+                console.error('Error saving', result);
+                alertMsg('Unable to Save!');
+            },
+            complete: function () { //请求完成时运行的函数（在请求成功或失败之后均调用，即在 success 和 error 函数之后，不管成功还是失败 都会进这个函数）
+            }
+        });
+    }
+
+
+    function saveFileToBackend() {
+        // console.log(window.location.href)
+        var url = window.location.href
+        var noteContent = document.querySelector('#note').innerHTML;
+        // 创建一个XMLHttpRequest对象
+        var xhr = new XMLHttpRequest();
+        // 设置请求方法和URL
+        xhr.open('POST', '/saveNote', true);
+        // 设置请求头，如果需要的话
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        // 监听请求完成事件
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                alertMsg('Saved!');
+            } else {
+                console.error('Error saving', xhr.statusText);
+                alertMsg('Unable to Save!');
+            }
+        };
+
+        const json = {
+            "url": url,
+            "content": noteContent
+        }
+        // 发送保存请求
+        xhr.send(JSON.stringify(json));
+    }
+
+    setInterval(saveFile, 21000);
+
+    function removeText() {
+        document.querySelector('#note').innerHTML = ""
+        alertMsg("Removed Text!");
+    }
+
+    function startTimer(duration, display) {
+        var timer = duration, seconds;
+        setInterval(function () {
+            seconds = parseInt(timer % 60, 10);
+            display.textContent = seconds;
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        fetchNoteData();
+        var twentysec = 20,
+            display = document.querySelector('#time');
+        startTimer(twentysec, display);
+    };
+
+</script>
+</body>
+</html>
