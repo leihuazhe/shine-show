@@ -57,22 +57,27 @@ public class NoteController {
   @RequestMapping("/saveNote")
   @ResponseBody
   public String saveNote(@RequestBody NoteVO request) {
-    log.info("收到Note: \n {}", request);
+
     String noteContent = request.getContent();
     String title = request.getTitle();
     if (StrUtil.isBlankIfStr(title) || "note".equals(title)) {
       title = "default";
     }
-    log.info("To saved title: {}", title);
+    //log.info("To saved title: {}", title);
     TNotes notes = notesMapper.selectOne(Wrappers.lambdaQuery(TNotes.class).eq(TNotes::getTitle, title));
     if (notes == null) {
       notes = new TNotes();
       notes.setTitle(title);
       notes.setContent(noteContent);
       notesMapper.insert(notes);
+      log.info("Newly saved title: {}, note: \n {}", title, notes);
     } else {
-      notes.setContent(noteContent);
-      notesMapper.updateById(notes);
+      String oldContent = notes.getContent();
+      if (!oldContent.equals(noteContent)) {
+        notes.setContent(noteContent);
+        notesMapper.updateById(notes);
+        log.info("Saved title: {}, note: \n {}", title, notes);
+      }
     }
     return "ok";
   }

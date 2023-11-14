@@ -50,7 +50,7 @@
     // }
 
 
-    const fs = new Filer.FileSystem();
+    //const fs = new Filer.FileSystem();
 
     // window.addEventListener('DOMContentLoaded', (event) => {
     //     fs.readFile('/note', 'utf8', function (err, data) {
@@ -80,7 +80,7 @@
         var originUrl = decodeURI(window.location.href);
         var items = originUrl.split("/");
         var url = items[items.length - 1];
-        console.log('url', url)
+        //console.log('url', url)
 
         $.ajax({
             url: `/note_content/${url}`,
@@ -158,7 +158,7 @@
         xhr.send(JSON.stringify(json));
     }
 
-    setInterval(saveFile, 21000);
+    setInterval(saveFileWithAjax, 10000);
 
     function removeText() {
         document.querySelector('#note').innerHTML = ""
@@ -178,7 +178,7 @@
 
     window.onload = function () {
         fetchNoteData();
-        var twentysec = 20,
+        var twentysec = 10,
             display = document.querySelector('#time');
         startTimer(twentysec, display);
     };
